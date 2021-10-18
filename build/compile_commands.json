@@ -1,0 +1,52 @@
+[
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/BPTree.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/BPTree.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/BPTree.cpp"
+},
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/Block.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/Block.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/Block.cpp"
+},
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/InternalNode.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/InternalNode.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/InternalNode.cpp"
+},
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/LeafNode.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/LeafNode.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/LeafNode.cpp"
+},
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/Query.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/Query.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/Query.cpp"
+},
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/RecordPtr.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/RecordPtr.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/RecordPtr.cpp"
+},
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/TreeNode.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/TreeNode.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/TreeNode.cpp"
+},
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/UnorderedHeap.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/UnorderedHeap.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/UnorderedHeap.cpp"
+},
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/main.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/main.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/main.cpp"
+},
+{
+  "directory": "/home/daksh0225/Sem7/Data-Systems/bptree-9/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -I/home/daksh0225/Sem7/Data-Systems/bptree-9/include -I/home/daksh0225/Sem7/Data-Systems/bptree-9/src -g -std=gnu++11 -o CMakeFiles/BPTree.dir/src/utils.cpp.o -c /home/daksh0225/Sem7/Data-Systems/bptree-9/src/utils.cpp",
+  "file": "/home/daksh0225/Sem7/Data-Systems/bptree-9/src/utils.cpp"
+}
+]

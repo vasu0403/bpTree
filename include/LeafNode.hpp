@@ -20,6 +20,7 @@ public:
 
     //helper functions
     Key max() override;
+    Key min();
 
     //key functions
     TreePtr insert_key(const Key &key, const RecordPtr &record_ptr) override;// TO BE IMPLEMENTED
