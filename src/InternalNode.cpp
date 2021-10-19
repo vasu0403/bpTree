@@ -31,6 +31,7 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
     TreePtr new_tree_ptr = NULL_PTR;
     TreePtr next_node_ptr = NULL_PTR;
     int ind = -1;
+    int last = 0;
     for(int i=0;i<this->keys.size();i++){
         if(key <= this->keys[i]){
             next_node_ptr = this->tree_pointers[i];
@@ -41,28 +42,40 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
     if(next_node_ptr == NULL_PTR){
         next_node_ptr = this->tree_pointers[this->tree_pointers.size()-1];
         ind = this->keys.size()-1;
+        last = 1;
     }
-    cout<<ind<<endl;
     TreeNode* next_node = TreeNode::tree_node_factory(next_node_ptr);
     TreePtr potential_split_node_ptr = next_node->insert_key(key, record_ptr);
-    cout<<potential_split_node_ptr<<endl;
     if(!is_null(potential_split_node_ptr)){
-        TreeNode new_leaf_node = TreeNode(LEAF, potential_split_node_ptr);
-        int key = new_leaf_node.max();
-        this->keys.insert(this->keys.begin()+ind+1, key);
-        this->tree_pointers.insert(this->tree_pointers.begin()+ind+1, potential_split_node_ptr);
+        int key = next_node->max();
+        this->keys.insert(this->keys.begin()+ind+last, key);
+        this->tree_pointers.insert(this->tree_pointers.begin()+ind+1+last, potential_split_node_ptr);
+        this->size++;
         if(this->overflows()){
-            InternalNode new_internal_node = InternalNode(NULL_PTR);
+            auto new_internal_node = new InternalNode(NULL_PTR);
             for(int i=0;i<this->keys.size();i++){
                 if(i < MIN_OCCUPANCY){
-                    i++;
                     continue;
                 }
-                
+                new_internal_node->keys.push_back(this->keys[i]);
             }
+            int cnt = 0;
+            for(int i=0;i<this->tree_pointers.size();i++){
+                if(i < MIN_OCCUPANCY){
+                    continue;
+                }
+                cnt++;
+                new_internal_node->tree_pointers.push_back(this->tree_pointers[i]);
+            }
+            new_internal_node->size = cnt;
+            this->size = MIN_OCCUPANCY;
+            int new_key = this->keys[MIN_OCCUPANCY-1];
+            this->keys.erase(this->keys.begin()+MIN_OCCUPANCY-1, this->keys.end());
+            this->tree_pointers.erase(this->tree_pointers.begin()+MIN_OCCUPANCY, this->tree_pointers.end());
+            new_tree_ptr = new_internal_node->tree_ptr;
+            new_internal_node->dump();
         }
     }
-    // cout << "InternalNode::insert_key not implemented" << endl;
     this->dump();
     return new_tree_ptr;
 }

@@ -21,7 +21,7 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
     TreePtr new_leaf = NULL_PTR; //if leaf is split, new_leaf = ptr to new split node ptr
     this->data_pointers.insert({key, record_ptr});
     this->size++;
-    if(this->size == BLOCK_SIZE+1){
+    if(this->overflows()){
         LeafNode new_leaf_node = LeafNode(NULL_PTR);
         int i = 0;
         vector<Key> keys;
@@ -30,7 +30,9 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
                 i++;
                 continue;
             }
-            new_leaf_node.insert_key(itr->first, itr->second);
+            // new_leaf_node.insert_key(itr->first, itr->second);
+            new_leaf_node.data_pointers.insert({itr->first, itr->second});
+            new_leaf_node.size++;
             keys.push_back(itr->first);
         }
         for(auto k: keys){
@@ -39,6 +41,7 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
         this->size = MIN_OCCUPANCY;
         keys.clear();
         new_leaf_node.next_leaf_ptr = this->next_leaf_ptr;
+        new_leaf_node.dump();
         this->next_leaf_ptr = new_leaf_node.tree_ptr;
         new_leaf = new_leaf_node.tree_ptr;
     }
