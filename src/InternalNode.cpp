@@ -1,4 +1,6 @@
 #include "InternalNode.hpp"
+#include "LeafNode.hpp"
+#include "RecordPtr.hpp"
 
 //creates internal node pointed to by tree_ptr or creates a new one
 InternalNode::InternalNode(const TreePtr &tree_ptr) : TreeNode(INTERNAL, tree_ptr) {
@@ -83,8 +85,63 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
 //deletes key from subtree rooted at this if exists
 //TODO: InternalNode::delete_key to be implemented
 void InternalNode::delete_key(const Key &key) {
-    TreePtr new_tree_ptr = NULL_PTR;
-    cout << "InternalNode::delete_key not implemented" << endl;
+    TreePtr next_node_ptr = NULL_PTR;
+    int ind = -1;
+    for(int i = 0; i < this->keys.size(); i++) {
+        if(key <= this->keys[i]) {
+            next_node_ptr = this->tree_pointers[i];
+            ind = i;
+            break;
+        }
+    }
+    if(next_node_ptr == NULL_PTR) {
+        next_node_ptr = this->tree_pointers[this->tree_pointers.size() - 1];
+        ind = this->keys.size();
+    }
+    TreeNode* next_node = TreeNode::tree_node_factory(next_node_ptr);
+    next_node->delete_key(key);
+    if(next_node->size < MIN_OCCUPANCY) {
+        if(ind != 0) {
+            // merge or redistribute with left child
+            TreePtr left_node_ptr = this->tree_pointers[ind - 1];
+            TreeNode* left_node = TreeNode::tree_node_factory(left_node_ptr);
+            if(left_node->size == MIN_OCCUPANCY) {
+                // redistribution cannot occur. Merge Instead
+                TreePtr mergedNodePtr = InternalNode::merge(left_node, next_node);
+                this->size--;
+                this->keys.erase(this->keys.begin() + ind - 1);
+                this->tree_pointers.erase(this->tree_pointers.begin() + ind);
+                this->tree_pointers[ind - 1] = mergedNodePtr;
+                this->keys[ind - 1] = TreeNode::tree_node_factory(mergedNodePtr)->max();
+            } else {
+                // redistribution can occur
+                InternalNode::redistribute(left_node, next_node);
+                this->keys[ind - 1] = TreeNode::tree_node_factory(left_node_ptr)->max();
+            }
+            delete left_node;
+        } else if(ind != this->keys.size()) {
+            // merge or redistribute with right child
+            TreePtr right_node_ptr = this->tree_pointers[ind + 1];
+            TreeNode* right_node = TreeNode::tree_node_factory(right_node_ptr);
+            if(right_node->size == MIN_OCCUPANCY) {
+                // redistribution cannot occur. Merge Instead
+                TreePtr mergedNodePtr = InternalNode::merge(next_node, right_node);
+                this->size--;
+                this->keys.erase(this->keys.begin() + ind);
+                this->tree_pointers.erase(this->tree_pointers.begin() + ind + 1);
+                this->tree_pointers[ind] = mergedNodePtr;
+                this->keys[ind] = TreeNode::tree_node_factory(mergedNodePtr)->max();
+            } else {
+                // redistribution can occur
+                InternalNode::redistribute(next_node, right_node);
+                this->keys[ind] = TreeNode::tree_node_factory(next_node_ptr)->max();
+            }
+            delete right_node;
+        } else {
+            cout << "ERROR: single child node. No one to redistribute or merge with !!";
+        }
+        delete next_node;
+    }
     this->dump();
 }
 
@@ -104,6 +161,100 @@ void InternalNode::range(ostream &os, const Key &min_key, const Key &max_key) co
     delete child_node;
 }
 
+void InternalNode::redistribute(TreeNode* left, TreeNode* right) {
+    // we always need to transfer only one element.
+    if(left->size > MIN_OCCUPANCY) {
+        if(left->node_type == LEAF) {
+            // both left and right must be leaf
+            LeafNode* left_leaf = new LeafNode(left->tree_ptr);
+            LeafNode* right_leaf = new LeafNode(right->tree_ptr);
+            left_leaf->size--;
+            right_leaf->size++;
+            auto last_pair = *(left_leaf->data_pointers.rbegin());
+            left_leaf->data_pointers.erase(last_pair.first);
+            right_leaf->data_pointers[last_pair.first] = (last_pair.second);
+            left_leaf->dump();
+            right_leaf->dump();
+            delete left_leaf;
+            delete right_leaf;
+        } else {
+            // both left and right must be internal
+            InternalNode* left_internal = new InternalNode(left->tree_ptr);
+            InternalNode* right_internal = new InternalNode(right->tree_ptr);
+            int maxi = left_internal->max();
+            left_internal->keys.pop_back();
+            TreePtr lastPtr = left_internal->tree_pointers.back();
+            left_internal->tree_pointers.pop_back();
+            right_internal->keys.insert(right_internal->keys.begin(), maxi);
+            right_internal->tree_pointers.insert(right_internal->tree_pointers.begin(), lastPtr);
+            left_internal->dump();
+            right_internal->dump();
+            delete left_internal;
+            delete right_internal;
+        }
+    } else {
+        if(left->node_type == LEAF) {
+            // both left and right must be leaf
+            LeafNode* left_leaf = new LeafNode(left->tree_ptr);
+            LeafNode* right_leaf = new LeafNode(right->tree_ptr);
+            left_leaf->size++;
+            right_leaf->size--;
+            auto first_pair = *(right_leaf->data_pointers.begin());
+            right_leaf->data_pointers.erase(first_pair.first);
+            left_leaf->data_pointers[first_pair.first] = (first_pair.second);
+            left_leaf->dump();
+            right_leaf->dump();
+            delete left_leaf;
+            delete right_leaf;
+        } else {
+            // both left and right must be internal
+            InternalNode* left_internal = new InternalNode(left->tree_ptr);
+            InternalNode* right_internal = new InternalNode(right->tree_ptr);
+            int maxi = left_internal->max();
+            right_internal->keys.erase(right_internal->keys.begin());
+            TreePtr firstPtr = right_internal->tree_pointers.front();
+            right_internal->tree_pointers.erase(right_internal->tree_pointers.begin());
+            left_internal->keys.push_back(maxi);
+            right_internal->tree_pointers.push_back(firstPtr);
+            left_internal->dump();
+            right_internal->dump();
+            delete left_internal;
+            delete right_internal;
+        }
+    }
+}
+
+TreePtr InternalNode::merge(TreeNode* left, TreeNode* right) {
+    if(left->node_type == LEAF) {
+        // both left and right must be leaf
+        LeafNode* left_leaf = new LeafNode(left->tree_ptr);
+        LeafNode* right_leaf = new LeafNode(right->tree_ptr);
+        for(auto rec: right_leaf->data_pointers){
+            left_leaf->data_pointers[rec.first] = rec.second;
+            left_leaf->size++;
+        }
+        left_leaf->next_leaf_ptr = right_leaf->next_leaf_ptr;
+        left_leaf->dump();
+        delete left_leaf;
+        delete right_leaf;
+    } else {
+        // both left and right must be internal
+        InternalNode* left_internal = new InternalNode(left->tree_ptr);
+        InternalNode* right_internal = new InternalNode(right->tree_ptr);
+        left_internal->keys.push_back(left_internal->max());
+        for(Key key: right_internal->keys) {
+            left_internal->keys.push_back(key);
+        }
+        for(TreePtr treePtr: right_internal->tree_pointers) {
+            left_internal->size++;
+            left_internal->tree_pointers.push_back(treePtr);
+        }
+        left_internal->dump();
+        delete left_internal;
+        delete right_internal;
+    }
+    return left->tree_ptr;
+}
 //exports node - used for grading
 void InternalNode::export_node(ostream &os) {
     TreeNode::export_node(os);

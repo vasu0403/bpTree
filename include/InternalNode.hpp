@@ -35,6 +35,10 @@ public:
     void export_node(ostream& os) override;
     void chart(ostream& os) override;
 
+    // delete function
+    static void redistribute(TreeNode* from, TreeNode* to);
+    static TreePtr merge(TreeNode* child1, TreeNode* child2);
+
     //I/O
     ostream& write(ostream& os) const override;
     istream& read(istream& is) override;
